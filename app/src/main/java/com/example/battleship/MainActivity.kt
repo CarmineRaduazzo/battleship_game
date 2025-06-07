@@ -15,12 +15,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.battleship.ui.theme.BattleShipTheme
 
+import androidx.compose.material3.Text
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.font.Font
-
+import androidx.compose.ui.unit.sp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,6 +54,15 @@ class MainActivity : ComponentActivity() {
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .height(430.dp)
+                                )
+                                Text(
+                                    text = "Battleship Game",
+                                    color = Color.Black,
+                                    fontSize = 70.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    fontFamily = customFont,
+                                    textAlign = TextAlign.Center,
+                                    lineHeight = 80.sp
                                 )
                             }
                         }
