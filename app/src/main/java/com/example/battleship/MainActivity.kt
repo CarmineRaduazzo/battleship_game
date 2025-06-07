@@ -5,7 +5,9 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -19,6 +21,7 @@ import androidx.compose.material3.Text
 
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -56,7 +59,7 @@ class MainActivity : ComponentActivity() {
                                         .height(430.dp)
                                 )
                                 Text(
-                                    text = "Battleship Game",
+                                    text = stringResource(id = R.string.battleship_game),
                                     color = Color.Black,
                                     fontSize = 70.sp,
                                     fontWeight = FontWeight.ExtraBold,
@@ -64,6 +67,36 @@ class MainActivity : ComponentActivity() {
                                     textAlign = TextAlign.Center,
                                     lineHeight = 80.sp
                                 )
+
+                                Spacer(modifier = Modifier.weight(1f))
+
+                                Row(
+                                    modifier = Modifier.fillMaxWidth()
+                                        .fillMaxWidth()
+                                        .padding(bottom = 80.dp, start = 35.dp, end = 35.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    Box(
+                                        modifier = Modifier
+                                            .width(150.dp)
+                                            .height(60.dp)
+                                            .clickable { finish() }
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.black_button),
+                                            contentDescription = "Quit Button",
+                                            contentScale = ContentScale.Inside,
+                                            modifier = Modifier.fillMaxSize()
+                                        )
+                                        Text(
+                                            text = stringResource(id = R.string.quit),
+                                            color = Color.Cyan,
+                                            fontSize = 20.sp,
+                                            fontFamily = customFont,
+                                            modifier = Modifier.align(Alignment.Center)
+                                        )
+                                    }
+                                }
                             }
                         }
                     }
