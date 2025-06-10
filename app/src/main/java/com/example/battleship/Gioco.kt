@@ -229,7 +229,7 @@ fun Legenda(ships: List<Ship>, orientation: String, onShipSelected: (Ship) -> Un
         }
     }
 }
-
+//Funzione per rimuovere le navi
 fun removeShip(
     placedShips: MutableList<List<Pair<Int, Int>>>,
     row: Int,
