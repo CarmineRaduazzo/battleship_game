@@ -15,6 +15,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.Composable
 
 //Nave
 data class Ship(val size: Int, var quantity: Int)
@@ -165,7 +166,68 @@ fun Legenda(ships: List<Ship>, orientation: String, onShipSelected: (Ship) -> Un
                         }
                     }
                 }
+            } //continuo...
+
+            Spacer(Modifier.height(24.dp)) //distanza tra i gruppi
+            Row(
+                horizontalArrangement = Arrangement.spacedBy(32.dp), //distanza tra le navi
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                group2.forEach { ship ->
+                    Box(modifier = Modifier.clickable { onShipSelected(ship) }) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(gridCellSpacing)
+                        ) {//distanza tra i blocchi
+                            repeat(ship.size) { index ->
+                                BlockLegenda(32.dp, index, ship.size, true)
+                            }
+                        }
+                    }
+                }
             }
+
+        } else {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(24.dp), //distanza tra i gruppi di navi verticaI
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Column(
+                verticalArrangement = Arrangement.spacedBy(20.dp), //distanza tra le navi
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                group1.forEach { ship ->
+                    Box(modifier = Modifier.clickable { onShipSelected(ship) }) {
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(gridCellSpacing)
+                        ) { // distanza tra i blocchi
+                            repeat(ship.size) { index ->
+                                BlockLegenda(28.dp, index, ship.size, false)
+                            }
+                        }
+                    }
+                }
+            }
+            Column(
+                verticalArrangement = Arrangement.spacedBy(20.dp), //distanza tra le navi
+                horizontalAlignment = Alignment.CenterHorizontally
+            ){
+                group2.forEach{ ship ->
+                    Box(modifier = Modifier.clickable { onShipSelected(ship) }){
+                        Column(
+                            verticalArrangement = Arrangement.spacedBy(gridCellSpacing)
+                        ){//distanza tra i blocchi
+                            repeat(ship.size){ index ->
+                                BlockLegenda(28.dp,index,ship.size,false)
+                            }
+                        }
+                    }
+                }
+            }
+        }
         }
     }
 }
+
+
