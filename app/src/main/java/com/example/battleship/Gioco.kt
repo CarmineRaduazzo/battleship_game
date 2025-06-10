@@ -3,6 +3,7 @@ package com.example.battleship
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
@@ -118,6 +119,51 @@ fun BlockLegenda(size: Dp, index: Int, total: Int, horizontal: Boolean) {
                         lineTo(w, h)
                         close()
                     }, color = Color.Black)
+                }
+            }
+        }
+    }
+}
+
+//Selezione Navi per orientamento dinamico
+@Composable
+fun Legenda(ships: List<Ship>, orientation: String, onShipSelected: (Ship) -> Unit){
+    val gridCellSpacing=4.dp //valore per la distanza delle celle della griglia
+
+    Column(horizontalAlignment = Alignment.CenterHorizontally){
+        Spacer(Modifier.height(10.dp))
+
+        val availableShips =  ships.filter { it.quantity > 0 }
+        val group1 = listOfNotNull(
+            availableShips.find { it.size == 5},
+            availableShips.find { it.size == 2}
+        )
+
+        val group2 = listOfNotNull(
+            availableShips.find { it.size == 4 },
+            availableShips.find { it.size == 3 }
+        )
+
+        if (orientation == "right"){
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ){
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(32.dp), //distanza tra le navi
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    group1.forEach( ship ->
+                    Box(modifier = Modifier.clickable { onShipSelected(ship) }) {
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(gridCellSpacing)
+                        ) {  //distanza tra i blocchi
+                            repeat(ship.size) { index ->
+                                BlockLegenda(32.dp, index, ship.size, true)
+                            }
+                        }
+                    }
                 }
             }
         }
