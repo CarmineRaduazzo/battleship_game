@@ -230,4 +230,22 @@ fun Legenda(ships: List<Ship>, orientation: String, onShipSelected: (Ship) -> Un
     }
 }
 
+fun removeShip(
+    placedShips: MutableList<List<Pair<Int, Int>>>,
+    row: Int,
+    col: Int,
+    shipsAvailable: MutableList<Ship>
+) {
+    val shipToRemove = placedShips.find { it.contains(row to col)}
+    if(shipToRemove != null) {
+        placedShips.remove(shipToRemove)
+        val size = shipToRemove.size
+        val idx = shipsAvailable.indexOfFirst { it.size == size }
+
+        if(idx != -1) {
+            shipsAvailable[idx] = shipsAvailable[idx].copy(quantity = shipsAvailable + 1)
+        }
+    }
+}
+
 
