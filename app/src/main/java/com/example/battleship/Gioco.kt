@@ -75,25 +75,25 @@ fun BlockLegenda(size: Dp, index: Int, total: Int, horizontal: Boolean) {
         Canvas(modifier = Modifier.fillMaxSize()) {
             val w = size.toPx()
             val h = size.toPx()
-            val stripeThickness = 18.dp.toPx()
+            val stripeThickness = 18.dp.toPx() //Linea più bassa
 
-            if (horizontal) {
+            if (horizontal) { //Linea centrale nera
                 val yCenter = h / 2f - stripeThickness / 2f
                 drawRect(color = Color.Black, topLeft = Offset(0f, yCenter), size = Size(w, stripeThickness))
 
-                if (index == 0) {
-                    drawPath(path = androidx.compose.ui.graphics.Path().apply {
+                if (index == 0) { //Punte avanti e dietro
+                    drawPath(path = Path().apply {
                         moveTo(0f, 0f)
                         lineTo(w / 4f, 0f)
-                        quadraticBezierTo(0f, h / 2f, w / 4f, h)
+                        quadraticTo(0f, h / 2f, w / 4f, h)
                         lineTo(0f, h)
                         close()
                     }, color = Color.Black)
                 } else if (index == total - 1) {
-                    drawPath(path = androidx.compose.ui.graphics.Path().apply {
+                    drawPath(path = Path().apply {
                         moveTo(w, 0f)
                         lineTo(w * 3 / 4f, 0f)
-                        quadraticBezierTo(w, h / 2f, w * 3 / 4f, h)
+                        quadraticTo(w, h / 2f, w * 3 / 4f, h)
                         lineTo(w, h)
                         close()
                     }, color = Color.Black)
@@ -102,19 +102,19 @@ fun BlockLegenda(size: Dp, index: Int, total: Int, horizontal: Boolean) {
                 val xCenter = w / 2f - stripeThickness / 2f
                 drawRect(color = Color.Black, topLeft = Offset(xCenter, 0f), size = Size(stripeThickness, h))
 
-                if (index == 0) {
-                    drawPath(path = androidx.compose.ui.graphics.Path().apply {
+                if (index == 0) { //Punte sopra e sotto
+                    drawPath(path = Path().apply {
                         moveTo(0f, 0f)
                         lineTo(0f, h / 4f)
-                        quadraticBezierTo(w / 2f, 0f, w, h / 4f)
+                        quadraticTo(w / 2f, 0f, w, h / 4f)
                         lineTo(w, 0f)
                         close()
                     }, color = Color.Black)
                 } else if (index == total - 1) {
-                    drawPath(path = androidx.compose.ui.graphics.Path().apply {
+                    drawPath(path = Path().apply {
                         moveTo(0f, h)
                         lineTo(0f, h * 3 / 4f)
-                        quadraticBezierTo(w / 2f, h, w, h * 3 / 4f)
+                        quadraticTo(w / 2f, h, w, h * 3 / 4f)
                         lineTo(w, h)
                         close()
                     }, color = Color.Black)
