@@ -407,4 +407,49 @@ fun GiocoScreen(navController: NavController) {
                 horizontalAlignment = Alignment.Start
             ) {
                 Spacer(modifier = Modifier.height(32.dp))
-//Da continuare
+
+                Grid8x8(
+                    placedShips = placedShips,
+                    onPlace = { row, col ->
+                        draggingShip?.let { ship ->
+                            if (ship.quantity > 0) {
+                                val cells = if (orientation == "right") {
+                                    (0 until ship.size).map { row to col + it }
+                                } else {
+                                    (0 until ship.size).map { row + it to col }
+                                }
+
+                                val outOfBounds =
+                                    cells.any { it.first !in 0..7 || it.second !in 0..7 }
+                                val overlap =
+                                    placedShips.any { it.intersect(cells.toSet()).isNotEmpty() }
+
+                                //La nave viene piazzato se tutto è OK
+                                if (!outOfBounds && !overlap) {
+                                    placedShips.add(cells)
+                                    val idx = shipsAvailable.indexOfFirst {
+                                        it.size == ship.size && it.quantity > 0
+                                    }
+                                    if (idx != -1) {
+                                        shipsAvailable[idx] = shipsAvailable[idx].copy(
+                                            quantity = shipsAvailable[idx].quantity - 1
+                                        )
+                                    }
+                                    draggingShip = null
+                                }
+                            }
+                        }
+                    },
+                    onRemove = { row, col ->
+                        //Quando si clicca la nave questa viene rimossa
+                        removeShip(placedShips, row, col, shipsAvailable)
+                    },
+                    selectedShip = draggingShip
+                )
+
+                Spacer(Modifier.height(16.dp))
+            }
+        }
+    }
+}
+//Da implementare la grafica
