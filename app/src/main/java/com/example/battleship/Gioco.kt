@@ -1,6 +1,5 @@
 package com.example.battleship
 
-import androidx.arch.core.internal.SafeIterableMap.SupportRemove
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,12 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import android.annotation.SuppressLint
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.navigation.NavController
+
+
 
 //Nave
 data class Ship(val size: Int, var quantity: Int)
@@ -133,7 +136,7 @@ fun BlockLegenda(size: Dp, index: Int, total: Int, horizontal: Boolean) {
 //Selezione Navi per orientamento dinamico
 @Composable
 fun Legenda(ships: List<Ship>, orientation: String, onShipSelected: (Ship) -> Unit){
-    val gridCellSpacing=4.dp //valore per la distanza delle celle della griglia
+    val gridCellSpacing= 4.dp //valore per la distanza delle celle della griglia
 
     Column(horizontalAlignment = Alignment.CenterHorizontally){
         Spacer(Modifier.height(10.dp))
@@ -372,3 +375,36 @@ fun Grid8x8(
         }
     }
 }
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun GiocoScreen(navController: NavController) {
+    //Direzione iniziale di posizionamento delle navi (orizzontale)
+    var orientation by remember { mutableStateOf("right") }
+
+    val shipsAvailable = remember {
+        mutableStateListOf(
+            Ship(5, 1),
+            Ship(4, 2),
+            Ship(3, 3),
+            Ship(2, 4)
+        )
+    }
+
+    var draggingShip by remember { mutableStateOf<Ship?>(null) }
+    val placedShips = remember { mutableStateListOf<List<Pair<Int, Int>>>() }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }
+    ) {
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 120.dp, start = 8.dp, end = 16.dp, top = 180.dp),
+                horizontalAlignment = Alignment.Start
+            ) {
+                Spacer(modifier = Modifier.height(32.dp))
+//Da continuare
