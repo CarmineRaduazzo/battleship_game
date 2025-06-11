@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.VectorProperty
 import androidx.compose.ui.text.style.TextAlign
@@ -257,37 +258,88 @@ fun removeShip(
 @Composable
 fun Grid8x8(
     placedShips: List<List<Pair<Int, Int>>>,
-    onPlace:(int,int) -> Unit,
-    onRemove: (int,int) -> Unit,
+    onPlace:(Int,Int) -> Unit,
+    onRemove: (Int,Int) -> Unit,
     selectedShip: Ship?
-){
-    val blockSize=42.dp
+) {
+    val blockSize = 42.dp
 
-    Column (modifier = Modifier.fillMaxWidth()) { //Header per le lettere
-        Row (modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Start){
+    Column(modifier = Modifier.fillMaxWidth()) { //Header per le lettere
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start
+        ) {
             Text("", modifier = Modifier.width(blockSize))
-            for (i in 'A'.."H"){
-                Text(i.toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
+            for (i in 'A'..'H')  {
+                Text(
+                    i.toString(),
+                    modifier = Modifier.width(blockSize),
+                    textAlign = TextAlign.Center
+                )
             }
         }
-        //Griglia (8*8)
-        for(row in 0 until 8){
-            Row (modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Start){
-                Text((row + 1).toString(),
-                    modifier = Modifier.width(blockSize),
-                    TextAlign=TextAlign.Center)
-                for ( col in 0 until 8){
-                     val shipCells  = placedShips.find {
-                         it.contains(row to col)
-                     }
-                    val shipLength  = shipCells?.size ?: -1
+        //Griglia (8 * 8)
+        for (row in 0 until 8) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+                Text((row + 1).toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
+
+                for (col in 0 until 8) {
+                    val shipCells = placedShips.find {
+                        it.contains(row to col)
+                    }
+                    val shipLength = shipCells?.size ?: -1
                     val isShipCell = shipCells != null
 
                     val shape = when {
-                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(6.dp,0.dp,0.dp,6.dp)
+                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(6.dp, 0.dp, 0.dp, 6.dp)
+                        isShipCell && indexInShip == shipLength - 1 -> RoundedCornerShape(0.dp, 6.dp, 6.dp, 0.dp)
                         isShipCell && shipLength == 1 -> RoundedCornerShape(6.dp)
                         else -> RoundedCornerShape(8.dp)
                     }
 
+                    Box( //continuo.... 2 commit della parte
+                        modifier = Modifier
+                            .size(blockSize)
+                            .padding(4.dp)
+                            .background(Color.White, shape)
+                            .border(2.dp, Color.Black, shape)
+                            .clickable {
+                                if (isShipCell) {
+                                    onRemove(row, col)
+                                } else if (selectedShip != null) {
+                                    onPlace(row, col)
+                                }
+                            },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isShipCell) {
+                            Canvas(modifier = Modifier.fillMaxWidth()) {
+                                val w = size.width
+                                val h = size.height
+                                val borderThickness = 2.dp.toPx()
+                                val stripeThickness =
+                                    4.dp.toPx() // serve per lo sfondo bianco, non cancellatelo
+                                drawRect(
+                                    color = Color.White,
+                                    topLeft = Offset(borderThickness / 2, borderThickness / 2),
+                                    size = Size(w - borderThickness, h - borderThickness)
+                                )// calcola l'orientamento della nave
+                                val orientation = if (shipLength > 1) {
+                                    val first = shipCells!![0]
+                                    val second = shipCells[1]
+                                    if (second.first == first.first) "right" else "down"
+                                } else {
+                                    "right"
+                                }//striscia nera centrale
+                                if (orientation == "right") {
+                                    val yCenter = h / 2f - stripeThickness / 2f
+                                    drawRect(color = Color.Black, topLeft = Offset(xCenter, 0f), size = Size(stripeThickness, h))
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
