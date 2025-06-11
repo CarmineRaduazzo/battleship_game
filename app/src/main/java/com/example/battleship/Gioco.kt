@@ -248,7 +248,7 @@ fun removeShip(
         val idx = shipsAvailable.indexOfFirst { it.size == size }
 
         if(idx != -1) {
-            shipsAvailable[idx] = shipsAvailable[idx].copy(quantity = shipsAvailable + 1)
+            shipsAvailable[idx] = shipsAvailable[idx].copy(quantity = shipsAvailable[idx].quantity + 1)
         }
     }
 }
@@ -270,7 +270,7 @@ fun Grid8x8(
             horizontalArrangement = Arrangement.Start
         ) {
             Text("", modifier = Modifier.width(blockSize))
-            for (i in 'A'..'H')  {
+            for (i in 'A'..'H') {
                 Text(
                     i.toString(),
                     modifier = Modifier.width(blockSize),
@@ -281,18 +281,35 @@ fun Grid8x8(
         //Griglia (8 * 8)
         for (row in 0 until 8) {
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
-                Text((row + 1).toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
+                Text(
+                    (row + 1).toString(),
+                    modifier = Modifier.width(blockSize),
+                    textAlign = TextAlign.Center
+                )
 
                 for (col in 0 until 8) {
                     val shipCells = placedShips.find {
                         it.contains(row to col)
                     }
+                    val indexInShip = shipCells?.indexOf(row to col) ?: -1
                     val shipLength = shipCells?.size ?: -1
                     val isShipCell = shipCells != null
 
                     val shape = when {
-                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(6.dp, 0.dp, 0.dp, 6.dp)
-                        isShipCell && indexInShip == shipLength - 1 -> RoundedCornerShape(0.dp, 6.dp, 6.dp, 0.dp)
+                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(
+                            6.dp,
+                            0.dp,
+                            0.dp,
+                            6.dp
+                        )
+
+                        isShipCell && indexInShip == shipLength - 1 -> RoundedCornerShape(
+                            0.dp,
+                            6.dp,
+                            6.dp,
+                            0.dp
+                        )
+
                         isShipCell && shipLength == 1 -> RoundedCornerShape(6.dp)
                         else -> RoundedCornerShape(8.dp)
                     }
@@ -331,9 +348,21 @@ fun Grid8x8(
                                 } else {
                                     "right"
                                 }//striscia nera centrale
+
                                 if (orientation == "right") {
                                     val yCenter = h / 2f - stripeThickness / 2f
-                                    drawRect(color = Color.Black, topLeft = Offset(xCenter, 0f), size = Size(stripeThickness, h))
+                                    drawRect(
+                                        color = Color.Black,
+                                        topLeft = Offset(0f, yCenter),
+                                        size = Size(w, stripeThickness)
+                                    )
+                                } else {
+                                    val xCenter = w / 2f - stripeThickness / 2f
+                                    drawRect(
+                                        color = Color.Black,
+                                        topLeft = Offset(xCenter, 0f),
+                                        size = Size(stripeThickness, h)
+                                    )
                                 }
                             }
                         }
