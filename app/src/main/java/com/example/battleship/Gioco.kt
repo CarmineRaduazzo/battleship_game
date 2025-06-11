@@ -1,11 +1,13 @@
 package com.example.battleship
 
+import androidx.arch.core.internal.SafeIterableMap.SupportRemove
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.Alignment
@@ -13,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.VectorProperty
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -248,4 +252,42 @@ fun removeShip(
     }
 }
 
+// Griglia per posizionamento navi
+
+@Composable
+fun Grid8x8(
+    placedShips: List<List<Pair<Int, Int>>>,
+    onPlace:(int,int) -> Unit,
+    onRemove: (int,int) -> Unit,
+    selectedShip: Ship?
+){
+    val blockSize=42.dp
+
+    Column (modifier = Modifier.fillMaxWidth()) { //Header per le lettere
+        Row (modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Start){
+            Text("", modifier = Modifier.width(blockSize))
+            for (i in 'A'.."H"){
+                Text(i.toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
+            }
+        }
+        //Griglia (8*8)
+        for(row in 0 until 8){
+            Row (modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Start){
+                Text((row + 1).toString(),
+                    modifier = Modifier.width(blockSize),
+                    TextAlign=TextAlign.Center)
+                for ( col in 0 until 8){
+                     val shipCells  = placedShips.find {
+                         it.contains(row to col)
+                     }
+                    val shipLength  = shipCells?.size ?: -1
+                    val isShipCell = shipCells != null
+
+                    val shape = when {
+                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(6.dp,0.dp,0.dp,6.dp)
+                        isShipCell && shipLength == 1 -> RoundedCornerShape(6.dp)
+                        else -> RoundedCornerShape(8.dp)
+                    }
 
