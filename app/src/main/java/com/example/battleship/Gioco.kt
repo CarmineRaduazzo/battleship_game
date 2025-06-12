@@ -24,8 +24,9 @@ import androidx.navigation.NavController
 import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 
-import androidx.compose.foundation.*
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -458,7 +459,7 @@ fun GiocoScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 30.dp, bottom = 16.dp, end = 16.dp), //Dimensione provvisoria
+                        .padding(top = 30.dp, bottom = 16.dp, end = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
                     Image( //Pulsante per cambiare l'orientamento delle navi
@@ -518,6 +519,41 @@ fun GiocoScreen(navController: NavController) {
                             },
                         contentScale = ContentScale.Inside
                     )
+                }
+            }
+
+            //Etichetta "Ships Cheatsheet"
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = Color.Cyan,
+                        shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                    )
+                    .padding(vertical = 40.dp)
+                    .align(Alignment.BottomCenter)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .offset(x = (-80).dp, y = (-55).dp)
+                ) {
+                    //Pulsante grafico del Ships CheatSheet
+                    Surface(
+                        color = Color.White,
+                        shape = RoundedCornerShape(50),
+                        modifier = Modifier
+                            .wrapContentWidth()
+                            .border(2.dp, Color.Cyan, shape = RoundedCornerShape(50))
+                    ) {
+                        Text(
+                            text = stringResource(R.string.ships_cheatsheet),
+                            color = Color.Black,
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(horizontal = 16.dp, vertical = 6.dp)
+                        )
+                    }
                 }
             }
         }

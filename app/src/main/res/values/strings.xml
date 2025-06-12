@@ -5,4 +5,7 @@
     <string name="battleship_game">Battleship Game</string>
     <string name="play">Play</string>
     <string name="quit">Quit</string>
+
+    /* Gioco */
+    <string name="ships_cheatsheet">Ships Cheatsheet</string>
 </resources>
