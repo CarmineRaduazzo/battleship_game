@@ -458,7 +458,7 @@ fun GiocoScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 40.dp, bottom = 20.dp, end = 20.dp), //Dimensione provvisoria
+                        .padding(top = 30.dp, bottom = 16.dp, end = 16.dp), //Dimensione provvisoria
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
                     Image( //Pulsante per cambiare l'orientamento delle navi
@@ -484,7 +484,7 @@ fun GiocoScreen(navController: NavController) {
                                 shipsAvailable.clear()
                                 shipsAvailable.addAll(updatedShips)
                             },
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Inside
                     )
 
                     Image( //Pulsante per confermare l'orientamento delle navi
@@ -516,7 +516,7 @@ fun GiocoScreen(navController: NavController) {
                                     }
                                 }
                             },
-                        contentScale = ContentScale.Crop
+                        contentScale = ContentScale.Inside
                     )
                 }
             }
