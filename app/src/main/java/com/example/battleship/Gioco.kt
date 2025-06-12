@@ -25,6 +25,9 @@ import androidx.compose.foundation.Image
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.layout.ContentScale
 
+import androidx.compose.foundation.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 //Nave
 data class Ship(val size: Int, var quantity: Int)
@@ -393,6 +396,7 @@ fun GiocoScreen(navController: NavController) {
         )
     }
 
+    val scope = rememberCoroutineScope()
     var draggingShip by remember { mutableStateOf<Ship?>(null) }
     val placedShips = remember { mutableStateListOf<List<Pair<Int, Int>>>() }
     val snackbarHostState = remember { SnackbarHostState() }
@@ -479,6 +483,38 @@ fun GiocoScreen(navController: NavController) {
                                 placedShips.addAll(pcShips)
                                 shipsAvailable.clear()
                                 shipsAvailable.addAll(updatedShips)
+                            },
+                        contentScale = ContentScale.Crop
+                    )
+
+                    Image( //Pulsante per confermare l'orientamento delle navi
+                        painter = painterResource(id = R.drawable.confirm_button),
+                        contentDescription = "Conferma",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clickable {
+                                val allPlaced = shipsAvailable.all { it.quantity == 0 }
+                                if (allPlaced) {
+                                    scope.launch {
+                                        for (i in 3 downTo 1) {
+                                            snackbarHostState.showSnackbar("La partita inizia tra $i...")
+                                            delay(1000)
+                                        }
+                                        val (pcShips, updatedShips) = generaNaviCasuali()
+                                        val giocatoreShipsCopy = placedShips.map { it.toList() }
+                                        val pcShipsCopy = pcShips.map { it.toList() }
+
+                                        navController.currentBackStackEntry?.savedStateHandle?.apply {
+                                            set("giocatoreShips", giocatoreShipsCopy)
+                                            set("pcShips", pcShipsCopy)
+                                        }
+
+                                        navController.navigate("giocoAttivo")
+
+                                        shipsAvailable.clear()
+                                        shipsAvailable.addAll(updatedShips)
+                                    }
+                                }
                             },
                         contentScale = ContentScale.Crop
                     )
