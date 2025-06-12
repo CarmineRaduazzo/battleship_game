@@ -555,6 +555,8 @@ fun GiocoScreen(navController: NavController) {
                         )
                     }
                 }
+                Legenda(shipsAvailable, orientation) { ship ->
+                    if (ship.quantity > 0) draggingShip = ship               }
             }
         }
     }
