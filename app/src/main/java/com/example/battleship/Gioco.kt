@@ -467,6 +467,21 @@ fun GiocoScreen(navController: NavController) {
                             },
                         contentScale = ContentScale.Inside
                     )
+
+                    Image( //Pulsante per inserire le navi in maniera casuale
+                        painter = painterResource(id = R.drawable.modify_button),
+                        contentDescription = "Piazza Navi Casuali",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clickable {
+                                placedShips.clear()
+                                val (pcShips, updatedShips) = generaNaviCasuali()
+                                placedShips.addAll(pcShips)
+                                shipsAvailable.clear()
+                                shipsAvailable.addAll(updatedShips)
+                            },
+                        contentScale = ContentScale.Crop
+                    )
                 }
             }
         }
