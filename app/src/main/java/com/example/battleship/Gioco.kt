@@ -21,7 +21,9 @@ import android.annotation.SuppressLint
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.navigation.NavController
-
+import androidx.compose.foundation.Image
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.layout.ContentScale
 
 
 //Nave
@@ -448,8 +450,25 @@ fun GiocoScreen(navController: NavController) {
                 )
 
                 Spacer(Modifier.height(16.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 40.dp, bottom = 20.dp, end = 20.dp), //Dimensione provvisoria
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
+                ) {
+                    Image( //Pulsante per cambiare l'orientamento delle navi
+                        painter = painterResource(R.drawable.rotate_button),
+                        contentDescription = "Cambia Orientamento",
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clickable {
+                                orientation = if (orientation == "right") "down" else "right"
+                            },
+                        contentScale = ContentScale.Inside
+                    )
+                }
             }
         }
     }
 }
-//Da implementare la grafica
