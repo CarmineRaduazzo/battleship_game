@@ -18,7 +18,8 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.isPopupLayout
+import androidx.compose.ui.unit.sp
+
 
 
 enum class Turno { GIOCATORE, PC }
@@ -81,6 +82,7 @@ fun GiocoAttivoScreen(navController: NavController) {
 
             //Visualizzazione campo del giocatore
             val customFont = FontFamily(Font(R.font.inter_ectrabold))
+
             if (turno == Turno.PC) {
                 Text("Player Field", fontSize = 20.sp, fontFamily = customFont)
                 Grid8x8(
