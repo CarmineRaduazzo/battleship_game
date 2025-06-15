@@ -15,7 +15,10 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.isPopupLayout
 
 
 enum class Turno { GIOCATORE, PC }
@@ -74,6 +77,20 @@ fun GiocoAttivoScreen(navController: NavController) {
                     messaggioNaveDistrutta = null
                 }
             }
+            Spacer(Modifier.height(40.dp))
+
+            //Visualizzazione campo del giocatore
+            val customFont = FontFamily(Font(R.font.inter_ectrabold))
+            if (turno == Turno.PC) {
+                Text("Player Field", fontSize = 20.sp, fontFamily = customFont)
+                Grid8x8(
+                    placedShips = giocatoreShips,
+                    mostraNavi = true,
+                    celleColpite = remember { mutableStateListOf() },
+                    onCellClik = { _, _ -> }
+                )
+            }
         }
     }
 }
+
