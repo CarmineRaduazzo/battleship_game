@@ -1,5 +1,18 @@
 package com.example.battleship
 
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 enum class Turno { GIOCATORE, PC }
@@ -59,31 +72,85 @@ suspend fun attaccoPC(
     }
 }
 
+@Composable
+fun Grid8x8(
+    placedShips: List<List<Pair<Int, Int>>>,
+    mostraNavi: Boolean,
+    celleColpite: List<Pair<Int, Int>>,
+    onCellClick: (Int, Int) -> Unit = { _, _ -> }
+) {
+    val blockSize = 42.dp
+    Column(
+        modifier = Modifier.fillMaxWidth(), horizontalAlignment =
+            Alignment.Start
+    ) {
+        Row { //Lettere della griglia
+            Text(" ", modifier = Modifier.width(blockSize))
+            for (i in 'A'..'H') Text(
+                i.toString(), modifier =
+                    Modifier.width(blockSize), textAlign = TextAlign.Center
+            )
+        }
+        for (row in 0 until 8) {
+            Row {
+                Text( //Numero delle righe
+                    (row + 1).toString(),
+                    modifier =
+                        Modifier.width(blockSize),
+                    textAlign = TextAlign.Center
+                )
+                for (col in 0 until 8) {
+                    val cell = row to col
+                    val contieneNave =
+                        placedShips.flatten().contains(cell)
+                    val isColpito = cell in celleColpite
+                    //Va a determinare il colore dello sfondo della cella
+                    val backgroundModifier = when {
+                        isColpito && contieneNave ->
+                            Modifier.background(Color.Red, RoundedCornerShape(4.dp))
 
+                        isColpito && !contieneNave ->
+                            Modifier.background(Color.LightGray, RoundedCornerShape(4.dp))
 
+                        mostraNavi && contieneNave ->
+                            Modifier.background(
+                                brush = Brush.verticalGradient(
+                                    colors =
+                                        listOf(Color(0xFF7A7A7A), Color(0xFF4D4D4D))
+                                ),
+                                shape = RoundedCornerShape(4.dp)
+                            )
 
+                        else -> Modifier.background(
+                            Color.White,
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                            RoundedCornerShape(4.dp)
+                        )
+                    }
+                    Box(
+                        modifier = Modifier
+                            .size(blockSize)
+                            .padding(4.dp)
+                            .then(backgroundModifier)
+                            .border(
+                                2.dp, Color.Black, RoundedCornerShape(4.dp)
+                            )
+                            .clickable { onCellClick(row, col) },
+                        contentAlignment = Alignment.Center
+                    ) {
+                        if (isColpito) {
+                            Text(
+                                //Se la nave è colpita mostra la 'X' altrimenti la 'O'
+                                text = if (contieneNave) "X" else "O",
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 
