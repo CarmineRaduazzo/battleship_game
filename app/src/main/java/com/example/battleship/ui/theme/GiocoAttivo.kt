@@ -14,8 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
-
-enum class Turno { GIOCATORE, PC }
+import androidx.navigation.NavController
 
 fun èColpo(ships: List<List<Pair<Int, Int>>>, cella: Pair<Int, Int>): Boolean {
     return ships.flatten().contains(cella)
@@ -151,7 +150,68 @@ fun Grid8x8(
         }
     }
 }
+// Inizio Gioco Attivo Screen
+enum class Turno { GIOCATORE, PC }
+@Composable
+fun GiocoAttivoScreen(navController: NavController) {
+    val giocatoreShips = navController.previousBackStackEntry
+        ?.savedStateHandle
+        ?.get<List<List<Pair<Int, Int>>>>("giocatoreShips")
+    val pcShips = navController.previousBackStackEntry
+        ?.savedStateHandle
+        ?.get<List<List<Pair<Int, Int>>>>("pcShips")
+    var turno by remember {
+        mutableStateOf(
+            if ((0..1).random() == 0)
+                Turno.GIOCATORE else Turno.PC
+        )
+    }
+    if (giocatoreShips == null || pcShips == null) {
+        Text("Dati non disponibili", color = Color.Red)
+        return
+    }
+    //Stato + LaunchedEffect
+    val celleColpiteGiocatore = remember {
+        mutableStateListOf<Pair<Int,
+                Int>>()
+    }
+    var interazioneAbilitata by remember { mutableStateOf(true) }
+    val snackbarHostState = remember { SnackbarHostState() }
+    val naviDistrutteGiocatore = remember { mutableStateListOf<Int>() }
+    var messaggioNaveDistrutta by remember {
+        mutableStateOf<String?>(null)
+    }
+    var vincitore by remember { mutableStateOf<String?>(null) }
+    var partitaFinita by remember { mutableStateOf(false) }
+    var punteggioGiocatore by remember { mutableStateOf(0) }
+    var punteggioPC by remember { mutableStateOf(0) }
 
+
+    LaunchedEffect(turno) {
+        if (turno == Turno.PC && !partitaFinita) {
+            interazioneAbilitata = false
+
+            attaccoPC(
+                celleColpiteGiocatore,
+                giocatoreShips,
+                naviDistrutteGiocatore,
+                onNaveColpita = { m, p ->
+                    m?.let { messaggioNaveDistrutta = it }
+                    p?.let { punteggioPC += it }
+                },
+                onVittoriaPC = {
+                    vincitore = "Ha vinto il PC!"
+                    partitaFinita = true
+                }
+            )
+
+            if (!partitaFinita) {
+                turno = Turno.GIOCATORE
+                interazioneAbilitata = true
+            }
+        }
+    }
+}
 
 
 
