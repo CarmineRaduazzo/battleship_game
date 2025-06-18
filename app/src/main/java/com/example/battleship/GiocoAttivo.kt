@@ -170,6 +170,7 @@ enum class Turno { GIOCATORE, PC }
 @Composable
 fun GiocoAttivoScreen(navController: NavController) {
     val customFont = FontFamily(Font(R.font.inter_extrabold))
+    val customCyan = Color(0xFFC1CFD5)
 
     val giocatoreShips = navController.previousBackStackEntry
         ?.savedStateHandle
@@ -313,8 +314,7 @@ fun GiocoAttivoScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(
-                id = R.drawable.player_turn_label),
+            painter = painterResource(id = R.drawable.player_turn_label),
             contentDescription = "Turn",
             contentScale = ContentScale.Inside,
             modifier = Modifier.fillMaxSize()
@@ -324,6 +324,29 @@ fun GiocoAttivoScreen(navController: NavController) {
             color = Color.Black,
             fontSize = 20.sp,
             textAlign = TextAlign.Center,
+            fontFamily = customFont
+        )
+    }
+
+    Spacer(Modifier.height(200.dp))
+    /*Valore MOMENTANEO. Da modificare in seguito*/
+
+    Box(
+        modifier = Modifier
+            .clickable { navController.popBackStack() }
+            .size(150.dp, 60.dp)
+    ) {
+        Image(
+            painter = painterResource(R.drawable.black_button),
+            contentDescription = "Sfondo Return Button",
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Inside
+        )
+        Text(
+            text = "Return",
+            modifier = Modifier.align(Alignment.Center),
+            color = customCyan,
+            fontSize = 20.sp,
             fontFamily = customFont
         )
     }
