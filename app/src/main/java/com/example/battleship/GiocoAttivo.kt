@@ -26,6 +26,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.Text
+import kotlinx.coroutines.launch
+
 
 import androidx.compose.foundation.layout.Arrangement
 
@@ -200,6 +202,7 @@ fun GiocoAttivoScreen(navController: NavController) {
     var punteggioPC by remember { mutableStateOf(0) }
 
 
+
     LaunchedEffect(turno) {
         if (turno == Turno.PC && !partitaFinita) {
             interazioneAbilitata = false
@@ -328,8 +331,67 @@ fun GiocoAttivoScreen(navController: NavController) {
         )
     }
 
-    Spacer(Modifier.height(200.dp))
-    /*Valore MOMENTANEO. Da modificare in seguito*/
+    Spacer(modifier = Modifier.height(16.dp))
+
+    val celleColpitePC = remember { mutableStateListOf<Pair<Int, Int>>() }
+    val naviDistruttePC = remember { mutableStateListOf<Int>() }
+    val coroutineScope = rememberCoroutineScope()
+
+    Grid8x8(
+        placedShips = if (turno == Turno.PC) giocatoreShips else pcShips,
+        mostraNavi = turno == Turno.PC,
+        celleColpite = if (turno == Turno.PC) celleColpiteGiocatore else celleColpitePC,
+        onCellClick = { row, col ->
+            if (turno == Turno.GIOCATORE && interazioneAbilitata && !partitaFinita) {
+                val cella = row to col
+                if (cella !in celleColpitePC) {
+                    celleColpitePC.add(cella)
+
+                    val (msg, punti) =
+                        verificaNaviDistrutteConStato(pcShips, celleColpitePC, naviDistruttePC)
+                    msg?.let { messaggioNaveDistrutta = it }
+                    punti?.let { punteggioGiocatore += it }
+
+                    if (naviDistruttePC.size == pcShips.size) {
+                        vincitore = when {
+                            punteggioGiocatore > punteggioPC -> "Hai vinto!"
+                            punteggioGiocatore < punteggioPC -> "Ha vinto il PC!"
+                            else -> "Pareggio!"
+                        }
+                        partitaFinita = true
+                        return@Grid8x8
+                    }
+
+                    coroutineScope.launch {
+                        interazioneAbilitata = false
+                        val haColpito = èColpo(pcShips, cella)
+                        if (!haColpito) {
+                            delay(3000)
+                            turno = Turno.PC
+                            messaggioNaveDistrutta = null
+                            attaccoPC(
+                                celleColpiteGiocatore,
+                                giocatoreShips,
+                                naviDistrutteGiocatore,
+                                onNaveColpita = { m, p ->
+                                    m?.let { messaggioNaveDistrutta = it }
+                                    p?.let { punteggioPC += it }
+                                },
+                                onVittoriaPC = {
+                                    vincitore = "Ha vinto il PC!"
+                                    partitaFinita = true
+                                }
+                            )
+                            turno = Turno.GIOCATORE
+                        }
+                        interazioneAbilitata = true
+                    }
+                }
+            }
+        }
+    )
+
+    Spacer(Modifier.height(72.dp))
 
     Box(
         modifier = Modifier
@@ -351,10 +413,3 @@ fun GiocoAttivoScreen(navController: NavController) {
         )
     }
 }
-
-
-
-
-
-
-
