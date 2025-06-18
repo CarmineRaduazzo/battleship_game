@@ -280,5 +280,58 @@ fun GiocoAttivoScreen(navController: NavController) {
                 )
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .width(150.dp) //Leggermente più lungo delle 2 etichette precedenti
+                .height(50.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Image(
+                painter = painterResource(id = R.drawable.player_turn_label),
+                contentDescription = "Turn",
+                contentScale = ContentScale.Inside,
+                modifier = Modifier.fillMaxSize()
+            )
+            Text(
+                text = "Turn: ${if (turno == Turno.GIOCATORE) "Player" else "PC"}",
+                color = Color.Black,
+                fontSize = 20.sp,
+                textAlign = TextAlign.Center,
+                fontFamily = customFont
+            )
+        }
+    }
+
+    Spacer(modifier = Modifier.height(16.dp))
+    //Etichetta che consente di visualizzare il turno
+    Box(
+        modifier = Modifier
+            .width(150.dp)
+            .height(50.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Image(
+            painter = painterResource(
+                id = R.drawable.player_turn_label),
+            contentDescription = "Turn",
+            contentScale = ContentScale.Inside,
+            modifier = Modifier.fillMaxSize()
+        )
+        Text(
+            text = "Turn: ${if (turno == Turno.GIOCATORE) "Player" else "PC"}",
+            color = Color.Black,
+            fontSize = 20.sp,
+            textAlign = TextAlign.Center,
+            fontFamily = customFont
+        )
     }
 }
+
+
+
+
+
+
+
