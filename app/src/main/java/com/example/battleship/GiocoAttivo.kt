@@ -11,10 +11,24 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 import androidx.navigation.NavController
+import androidx.compose.foundation.Image
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.unit.sp
+import androidx.compose.material3.Text
+
+import androidx.compose.foundation.layout.Arrangement
+
 
 fun èColpo(ships: List<List<Pair<Int, Int>>>, cella: Pair<Int, Int>): Boolean {
     return ships.flatten().contains(cella)
@@ -150,10 +164,13 @@ fun Grid8x8(
         }
     }
 }
+
 // Inizio Gioco Attivo Screen
 enum class Turno { GIOCATORE, PC }
 @Composable
 fun GiocoAttivoScreen(navController: NavController) {
+    val customFont = FontFamily(Font(R.font.inter_extrabold))
+
     val giocatoreShips = navController.previousBackStackEntry
         ?.savedStateHandle
         ?.get<List<List<Pair<Int, Int>>>>("giocatoreShips")
@@ -170,17 +187,12 @@ fun GiocoAttivoScreen(navController: NavController) {
         Text("Dati non disponibili", color = Color.Red)
         return
     }
-    //Stato + LaunchedEffect
-    val celleColpiteGiocatore = remember {
-        mutableStateListOf<Pair<Int,
-                Int>>()
-    }
+
+    val celleColpiteGiocatore = remember { mutableStateListOf<Pair<Int, Int>>() }
     var interazioneAbilitata by remember { mutableStateOf(true) }
     val snackbarHostState = remember { SnackbarHostState() }
     val naviDistrutteGiocatore = remember { mutableStateListOf<Int>() }
-    var messaggioNaveDistrutta by remember {
-        mutableStateOf<String?>(null)
-    }
+    var messaggioNaveDistrutta by remember { mutableStateOf<String?>(null) }
     var vincitore by remember { mutableStateOf<String?>(null) }
     var partitaFinita by remember { mutableStateOf(false) }
     var punteggioGiocatore by remember { mutableStateOf(0) }
@@ -211,12 +223,62 @@ fun GiocoAttivoScreen(navController: NavController) {
             }
         }
     }
+
+    Spacer(Modifier.height(50.dp)) //Provvisorio
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 25.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            //Prima Etichetta: Player Score
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .height(50.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.player_turn_label),
+                    contentDescription = "Player Score",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Text(
+                    text = "Player: $punteggioGiocatore",
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = customFont
+                )
+            }
+            //Seconda etichetta: PC score
+            Box(
+                modifier = Modifier
+                    .width(140.dp)
+                    .height(50.dp),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.player_turn_label),
+                    contentDescription = "PC Score",
+                    contentScale = ContentScale.Inside,
+                    modifier = Modifier.fillMaxSize()
+                )
+                Text(
+                    text = "PC: $punteggioPC",
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center,
+                    fontFamily = customFont
+                )
+            }
+        }
+    }
 }
-
-
-
-
-
-
-
-
