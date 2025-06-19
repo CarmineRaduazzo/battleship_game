@@ -24,6 +24,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,6 +36,8 @@ data class Ship(val size: Int, var quantity: Int)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun GiocoScreen(navController: NavController) {
+    val customFont = FontFamily(Font(R.font.inter_extrabold))
+    val customCyan = Color(0xFFC1CFD5)
     //Direzione iniziale di posizionamento delle navi (orizzontale)
     var orientation by remember { mutableStateOf("right") }
 
@@ -64,6 +68,7 @@ fun GiocoScreen(navController: NavController) {
         ) {
             Text(
                 text = "Posiziona le tue navi",
+                fontFamily = customFont,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
@@ -127,7 +132,7 @@ fun GiocoScreen(navController: NavController) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 30.dp, bottom = 16.dp, end = 16.dp),
+                        .padding(top = 10.dp, bottom = 16.dp, end = 16.dp),
                     horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.End)
                 ) {
                     Image( //Pulsante per cambiare l'orientamento delle navi
@@ -198,7 +203,7 @@ fun GiocoScreen(navController: NavController) {
                         .fillMaxWidth()
                         .height(260.dp)
                         .background(
-                            color = Color.Cyan,
+                            color = customCyan,
                             shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                         )
                         .align(Alignment.BottomCenter)
@@ -215,10 +220,11 @@ fun GiocoScreen(navController: NavController) {
                             shape = RoundedCornerShape(50),
                             modifier = Modifier
                                 .wrapContentWidth()
-                                .border(2.dp, Color.Cyan, shape = RoundedCornerShape(50))
+                                .border(2.dp, customCyan, shape = RoundedCornerShape(50))
                         ) {
                             Text(
                                 text = stringResource(R.string.ships_cheatsheet),
+                                fontFamily = customFont,
                                 color = Color.Black,
                                 style = MaterialTheme.typography.titleMedium,
                                 fontWeight = FontWeight.Bold,
@@ -518,3 +524,4 @@ fun removeShip(
         }
     }
 }
+

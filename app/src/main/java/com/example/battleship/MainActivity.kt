@@ -45,6 +45,7 @@ class MainActivity : ComponentActivity() {
             BattleShipTheme {
                 val navController = rememberNavController()
                 val customFont = FontFamily(Font(R.font.inter_extrabold))
+                val customCyan = Color(0xFFC1CFD5)
 
                 NavHost(navController = navController, startDestination = "menu") {
                     composable("menu") {
@@ -99,7 +100,7 @@ class MainActivity : ComponentActivity() {
                                         )
                                         Text(
                                             text = stringResource(id = R.string.quit),
-                                            color = Color.Cyan,
+                                            color = customCyan,
                                             fontSize = 20.sp,
                                             fontFamily = customFont,
                                             modifier = Modifier.align(Alignment.Center)
