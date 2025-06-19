@@ -412,4 +412,64 @@ fun GiocoAttivoScreen(navController: NavController) {
             fontFamily = customFont
         )
     }
+
+    if (partitaFinita) {
+        val messaggioVincitore = vincitore ?: run {
+            when {
+                punteggioGiocatore > punteggioPC -> "Hai vinto!"
+                punteggioGiocatore < punteggioPC -> "Ha vinto il PC!"
+                else -> "Pareggio!"
+            }
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0xAA000000)),
+            contentAlignment = Alignment.Center
+        ) {
+            Column(
+                modifier = Modifier
+                    .background(
+                        Color.White,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "Partita finita!",
+                    fontSize = 28.sp,
+                    color = Color.Black,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+                Text(
+                    text = messaggioVincitore,
+                    fontSize = 22.sp,
+                    color = Color.DarkGray,
+                    modifier = Modifier.padding(bottom = 32.dp)
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                    Button(
+                        onClick = {
+                            (navController.context as? android.app.Activity)?.finish()
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
+                    ) {
+                        Text("Esci", color = Color.White)
+                    }
+                    Button(
+                        onClick = {
+                            navController.navigate("preparazione") {
+                                popUpTo("gioco") { inclusive = true }
+                            }
+                        },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF1565C0))
+                    ) {
+                        Text("Gioca ancora", color = Color.White)
+                    }
+                }
+            }
+        }
+    }
 }
