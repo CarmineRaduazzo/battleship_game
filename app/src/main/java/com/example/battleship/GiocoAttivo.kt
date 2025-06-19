@@ -406,7 +406,7 @@ fun Grid8x8(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        Row { //Lettere della grugkua
+        Row { //Lettere della griglia
             Text(" ", modifier = Modifier.width(blockSize))
             for (i in 'A'..'H') {
                 Text(i.toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
