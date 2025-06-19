@@ -427,21 +427,21 @@ fun Grid8x8(
                     //Va a determinare il colore dello sfondo della cella
                     val backgroundModifier = when {
                         isColpito && contieneNave ->
-                            Modifier.background(Color.Red, RoundedCornerShape(4.dp))
+                            Modifier.background(Color.Red, RoundedCornerShape(8.dp))
 
                         isColpito && !contieneNave ->
-                            Modifier.background(Color.LightGray, RoundedCornerShape(4.dp))
+                            Modifier.background(Color.Cyan, RoundedCornerShape(8.dp))
 
                         mostraNavi && contieneNave ->
                             Modifier.background(
                                 brush = Brush.verticalGradient(
                                     colors = listOf(Color(0xFF7A7A7A), Color(0xFF4D4D4D))
                                 ),
-                                shape = RoundedCornerShape(4.dp)
+                                shape = RoundedCornerShape(8.dp)
                             )
                         else -> Modifier.background(
                             Color.White,
-                            RoundedCornerShape(4.dp)
+                            RoundedCornerShape(8.dp)
                         )
                     }
 
@@ -452,7 +452,7 @@ fun Grid8x8(
                             .then(backgroundModifier)
                             .border(
                                 2.dp, Color.Black,
-                                RoundedCornerShape(4.dp)
+                                RoundedCornerShape(8.dp)
                             )
                             .clickable { onCellClick(row, col) },
                         contentAlignment = Alignment.Center
