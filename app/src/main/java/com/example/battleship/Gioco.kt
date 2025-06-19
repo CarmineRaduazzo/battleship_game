@@ -448,24 +448,32 @@ fun Grid8x8(
                     val shipLength = shipCells?.size ?: -1
                     val isShipCell = shipCells != null
 
-                    val shape = when {
-                        isShipCell && indexInShip == 0 && shipLength > 1 -> RoundedCornerShape(
-                            6.dp,
-                            0.dp,
-                            0.dp,
-                            6.dp
-                        )
+                    val shape = if (isShipCell && shipCells != null) {
+                        val shipLength = shipCells.size
 
-                        isShipCell && indexInShip == shipLength - 1 -> RoundedCornerShape(
-                            0.dp,
-                            6.dp,
-                            6.dp,
-                            0.dp
-                        )
+                        if (shipLength > 1) {
+                            val isVertical = shipCells[0].first != shipCells[1].first
 
-                        isShipCell && shipLength == 1 -> RoundedCornerShape(6.dp)
-                        else -> RoundedCornerShape(8.dp)
+                            when (indexInShip) {
+                                0 -> if (isVertical)
+                                    RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)
+                                else
+                                    RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp)
+
+                                shipLength - 1 -> if (isVertical)
+                                    RoundedCornerShape(bottomStart = 6.dp, bottomEnd = 6.dp)
+                                else
+                                    RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp)
+
+                                else -> RoundedCornerShape(0.dp)
+                            }
+                        } else {
+                            RoundedCornerShape(6.dp)
+                        }
+                    } else {
+                        RoundedCornerShape(8.dp)
                     }
+
 
                     Box( //continuo.... 2 commit della parte
                         modifier = Modifier
