@@ -201,7 +201,7 @@ fun GiocoAttivoScreen(navController: NavController) {
 
             Box(modifier = Modifier.width(420.dp), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val titolo = if (turno == Turno.PC) "Attack the user" else "Attach the PC (tap to attack)"
+                    val titolo = if (turno == Turno.PC) "Attack the user" else "Attack the PC (tap to attack)"
                     Text(titolo, fontSize = 20.sp, fontFamily = customFont)
 
                     Spacer(Modifier.height(20.dp))
@@ -224,7 +224,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                                         // Calcolo vincitore in base ai punteggi
                                         vincitore = when {
                                             punteggioGiocatore > punteggioPC -> "You won!"
-                                            punteggioGiocatore < punteggioPC -> "THe PC has won!"
+                                            punteggioGiocatore < punteggioPC -> "The PC has won!"
                                             else -> "It's a draw!"
                                         }
                                         partitaFinita = true
@@ -423,11 +423,15 @@ fun Grid8x8(
 ) {
     val blockSize = 42.dp
 
+    fun isShipSunk(ship: List<Pair<Int, Int>>, hits: List<Pair<Int, Int>>): Boolean {
+        return ship.all { it in hits }
+    }
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.Start
     ) {
-        Row { //Lettere della griglia
+        Row { // Lettere della griglia
             Text(" ", modifier = Modifier.width(blockSize))
             for (i in 'A'..'H') {
                 Text(i.toString(), modifier = Modifier.width(blockSize), textAlign = TextAlign.Center)
@@ -446,27 +450,27 @@ fun Grid8x8(
                     val contieneNave = placedShips.flatten().contains(cell)
                     val isColpito = cell in celleColpite
 
-                    val shape = if (contieneNave && mostraNavi) {
-                        val nave = placedShips.find { it.contains(cell) }
-                        if (nave != null) {
-                            val index = nave.indexOf(cell)
-                            val isVertical = nave.size > 1 && (nave[0].first != nave[1].first)
+                    val shape = if (contieneNave && placedShips.any { ship -> ship.contains(cell) && isShipSunk(ship, celleColpite) }) {
+                        val nave = placedShips.find { it.contains(cell) }!!
+                        val index = nave.indexOf(cell)
+                        val isVertical = nave.size > 1 && (nave[0].first != nave[1].first)
 
-                            when (index) {
-                                0 -> if (isVertical)
-                                    RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)
-                                else
-                                    RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp)
+                        when (index) {
+                            0 -> if (isVertical)
+                                RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)
+                            else
+                                RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp)
 
-                                nave.lastIndex -> if (isVertical)
-                                    RoundedCornerShape(bottomStart = 6.dp, bottomEnd = 6.dp)
-                                else
-                                    RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp)
+                            nave.lastIndex -> if (isVertical)
+                                RoundedCornerShape(bottomStart = 6.dp, bottomEnd = 6.dp)
+                            else
+                                RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp)
 
-                                else -> RoundedCornerShape(0.dp)
-                            }
-                        } else RoundedCornerShape(6.dp)
-                    } else RoundedCornerShape(8.dp)
+                            else -> RoundedCornerShape(0.dp)
+                        }
+                    } else {
+                        RoundedCornerShape(8.dp)
+                    }
 
                     val backgroundModifier = when {
                         isColpito && contieneNave ->
@@ -502,7 +506,7 @@ fun Grid8x8(
                     ) {
                         if (isColpito) {
                             Text(
-                                //Se la nave è colpita mostra la 'X' altrimenti la '●'
+                                // Se la nave è colpita mostra la 'X' altrimenti la '●'
                                 text = if (contieneNave) "X" else "●",
                                 style = MaterialTheme.typography.bodySmall
                             )
@@ -513,6 +517,7 @@ fun Grid8x8(
         }
     }
 }
+
 
 fun verificaNaviDistrutteConStato(
     tutteLeNavi: List<List<Pair<Int, Int>>>,
