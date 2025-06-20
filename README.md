@@ -43,5 +43,3 @@ The app is structured into three main screens:
 - **GiocoAttivoScreen**: active gameplay screen where the user challenges the AI.
 
 The project is developed entirely in Kotlin, using Jetpack Compose for the user interface. All gameplay logic is self-contained within the app and does not require external connections. The project was developed by a three-member team, with responsibilities distributed according to each member’s area of expertise.
-
-Some implementation details have been intentionally omitted to focus this documentation on the user experience and key functionalities.
