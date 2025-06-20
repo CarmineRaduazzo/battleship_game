@@ -15,7 +15,7 @@ The gameplay experience is enhanced by dynamic turn management, a scoring system
 - Match against a computer opponent with automated turn logic.
 - Scoring system based on the size of ships destroyed.
 - Visual feedback when ships are hit or sunk.
-- Modern and responsive UI developed entirely with Jetpack Compose.
+- Modern UI developed entirely with Jetpack Compose.
 - Simple screen navigation with state preservation between stages.
 
 **Installation**
