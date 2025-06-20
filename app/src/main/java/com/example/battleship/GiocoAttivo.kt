@@ -105,7 +105,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                     hostState = snackbarHostState,
                     modifier = Modifier.padding(8.dp)
                 ) {
-                    Snackbar(containerColor = Color(0xFF1565C0), contentColor = Color.White) {
+                    Snackbar(containerColor = Color(0xFF323232), contentColor = Color.White) {
                         Text(it.visuals.message)
                     }
                 }
@@ -328,28 +328,49 @@ fun GiocoAttivoScreen(navController: NavController) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Button(
-                            onClick = {
-                                (navController.context as? android.app.Activity)?.finish()
-                            },
-                            colors = ButtonDefaults.buttonColors(containerColor = Color.Red)
-                        ) {
-                            Text("Esci", color = Color.White)
-                        }
-
-                        Button(
-                            onClick = {
-                                navController.navigate("preparazione") {
-                                    popUpTo("gioco") { inclusive = true }
+                        Box(
+                            modifier = Modifier
+                                .clickable {
+                                    (navController.context as? android.app.Activity)?.finish()
                                 }
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF1565C0)
-                            )
+                                .size(width = 150.dp, height = 50.dp)
                         ) {
-                            Text("Gioca ancora", color = Color.White)
+                            Image(
+                                painter = painterResource(id = R.drawable.black_button),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            Text(
+                                "Esci",
+                                color = customCyan,
+                                fontFamily = customFont,
+                                fontSize = 20.sp,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
                         }
 
+                        Box(
+                            modifier = Modifier
+                                .clickable {
+                                    navController.navigate("preparazione") {
+                                        popUpTo("gioco") { inclusive = true }
+                                    }
+                                }
+                                .size(width = 150.dp, height = 50.dp)
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.cyan_button),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                            Text(
+                                "Gioca ancora",
+                                color = Color.Black,
+                                fontFamily = customFont,
+                                fontSize = 20.sp,
+                                modifier = Modifier.align(Alignment.Center)
+                            )
+                        }
                     }
                 }
             }
@@ -424,24 +445,46 @@ fun Grid8x8(
                     val cell = row to col
                     val contieneNave = placedShips.flatten().contains(cell)
                     val isColpito = cell in celleColpite
-                    //Va a determinare il colore dello sfondo della cella
+
+                    val shape = if (contieneNave && mostraNavi) {
+                        val nave = placedShips.find { it.contains(cell) }
+                        if (nave != null) {
+                            val index = nave.indexOf(cell)
+                            val isVertical = nave.size > 1 && (nave[0].first != nave[1].first)
+
+                            when (index) {
+                                0 -> if (isVertical)
+                                    RoundedCornerShape(topStart = 6.dp, topEnd = 6.dp)
+                                else
+                                    RoundedCornerShape(topStart = 6.dp, bottomStart = 6.dp)
+
+                                nave.lastIndex -> if (isVertical)
+                                    RoundedCornerShape(bottomStart = 6.dp, bottomEnd = 6.dp)
+                                else
+                                    RoundedCornerShape(topEnd = 6.dp, bottomEnd = 6.dp)
+
+                                else -> RoundedCornerShape(0.dp)
+                            }
+                        } else RoundedCornerShape(6.dp)
+                    } else RoundedCornerShape(8.dp)
+
                     val backgroundModifier = when {
                         isColpito && contieneNave ->
-                            Modifier.background(Color.Red, RoundedCornerShape(8.dp))
+                            Modifier.background(Color.Red, shape)
 
                         isColpito && !contieneNave ->
-                            Modifier.background(Color.Cyan, RoundedCornerShape(8.dp))
+                            Modifier.background(Color.Cyan, shape)
 
                         mostraNavi && contieneNave ->
                             Modifier.background(
                                 brush = Brush.verticalGradient(
                                     colors = listOf(Color(0xFF7A7A7A), Color(0xFF4D4D4D))
                                 ),
-                                shape = RoundedCornerShape(8.dp)
+                                shape = shape
                             )
                         else -> Modifier.background(
                             Color.White,
-                            RoundedCornerShape(8.dp)
+                            shape
                         )
                     }
 
@@ -452,15 +495,15 @@ fun Grid8x8(
                             .then(backgroundModifier)
                             .border(
                                 2.dp, Color.Black,
-                                RoundedCornerShape(8.dp)
+                                shape
                             )
                             .clickable { onCellClick(row, col) },
                         contentAlignment = Alignment.Center
                     ) {
                         if (isColpito) {
                             Text(
-                                //Se la nave è colpita mostra la 'X' altrimenti la 'O'
-                                text = if (contieneNave) "X" else "O",
+                                //Se la nave è colpita mostra la 'X' altrimenti la '●'
+                                text = if (contieneNave) "X" else "●",
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
