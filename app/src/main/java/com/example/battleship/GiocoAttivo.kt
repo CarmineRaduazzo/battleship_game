@@ -64,7 +64,7 @@ fun GiocoAttivoScreen(navController: NavController) {
 
 
     if (giocatoreShips == null || pcShips == null) {
-        Text("Dati non disponibili", color = Color.Red)
+        Text("Data not available", color = Color.Red)
         return
     }
     LaunchedEffect(turno) {
@@ -80,7 +80,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                     p?.let { punteggioPC += it }
                 },
                 onVittoriaPC = {
-                    vincitore = "Ha vinto il PC!"
+                    vincitore = "The PC has won!"
                     partitaFinita = true
                 }
             )
@@ -201,7 +201,7 @@ fun GiocoAttivoScreen(navController: NavController) {
 
             Box(modifier = Modifier.width(420.dp), contentAlignment = Alignment.Center) {
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    val titolo = if (turno == Turno.PC) "Attacca l'utente" else "Attacca il PC (clicca per attaccare)"
+                    val titolo = if (turno == Turno.PC) "Attack the user" else "Attach the PC (tap to attack)"
                     Text(titolo, fontSize = 20.sp, fontFamily = customFont)
 
                     Spacer(Modifier.height(20.dp))
@@ -223,9 +223,9 @@ fun GiocoAttivoScreen(navController: NavController) {
                                     if (naviDistruttePC.size == pcShips.size) {
                                         // Calcolo vincitore in base ai punteggi
                                         vincitore = when {
-                                            punteggioGiocatore > punteggioPC -> "Hai vinto!"
-                                            punteggioGiocatore < punteggioPC -> "Ha vinto il PC!"
-                                            else -> "Pareggio!"
+                                            punteggioGiocatore > punteggioPC -> "You won!"
+                                            punteggioGiocatore < punteggioPC -> "THe PC has won!"
+                                            else -> "It's a draw!"
                                         }
                                         partitaFinita = true
                                         return@Grid8x8
@@ -250,7 +250,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                                                     p?.let { punteggioPC += it }
                                                 },
                                                 onVittoriaPC = {
-                                                    vincitore = "Ha vinto il PC!"
+                                                    vincitore = "The PC has won!"
                                                     partitaFinita = true
                                                 }
                                             )
@@ -294,9 +294,9 @@ fun GiocoAttivoScreen(navController: NavController) {
         if (partitaFinita) {
             val messaggioVincitore = vincitore ?: run {
                 when {
-                    punteggioGiocatore > punteggioPC -> "Hai vinto!"
-                    punteggioGiocatore < punteggioPC -> "Ha vinto il PC!"
-                    else -> "Pareggio!"
+                    punteggioGiocatore > punteggioPC -> "You won!"
+                    punteggioGiocatore < punteggioPC -> "The PC has won!"
+                    else -> "It's a draw!"
                 }
             }
 
@@ -313,7 +313,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Text(
-                        text = "Partita finita!",
+                        text = "Game Over!",
                         fontSize = 28.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 16.dp)
@@ -341,7 +341,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                                 modifier = Modifier.fillMaxSize()
                             )
                             Text(
-                                "Esci",
+                                "Quit",
                                 color = customCyan,
                                 fontFamily = customFont,
                                 fontSize = 20.sp,
@@ -364,7 +364,7 @@ fun GiocoAttivoScreen(navController: NavController) {
                                 modifier = Modifier.fillMaxSize()
                             )
                             Text(
-                                "Gioca ancora",
+                                "Rematch",
                                 color = Color.Black,
                                 fontFamily = customFont,
                                 fontSize = 20.sp,
@@ -529,7 +529,7 @@ fun verificaNaviDistrutteConStato(
                 5 -> 400
                 else -> 0
             }
-            return "Nave di ${nave.size} celle distrutta!" to punti
+            return "A ${nave.size}-cell ship has been destroyed!" to punti
         }
     }
     return null to null

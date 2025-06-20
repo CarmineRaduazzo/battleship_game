@@ -67,7 +67,7 @@ fun GiocoScreen(navController: NavController) {
             contentAlignment = Alignment.Center
         ) {
             Text(
-                text = "Posiziona le tue navi",
+                text = "Set up your ships",
                 fontFamily = customFont,
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
@@ -171,7 +171,7 @@ fun GiocoScreen(navController: NavController) {
                                 if (allPlaced) {
                                     scope.launch {
                                         for (i in 3 downTo 1) {
-                                            snackbarHostState.showSnackbar("La partita inizia tra $i...")
+                                            snackbarHostState.showSnackbar("The game starts in $i...")
                                             delay(1000)
                                         }
                                         val (pcShips, updatedShips) = generaNaviCasuali()
